@@ -273,7 +273,8 @@ export async function generatePdf(page) {
   await pause(page, 1000);
   await highlight(page, '#btn-pdf');
 
-  page.once('dialog', async (d) => { await d.accept(); });
+  // Dialog-handler wordt centraal door runScenario/test-runner geinstalleerd.
+  // Een page.once hier zou conflicteren met een page.on elders ("dialog already handled").
 
   await page.click('#btn-pdf');
   info('Spinner verschijnt — pdfMake bouwt rapport');
@@ -285,6 +286,10 @@ export async function generatePdf(page) {
 
 export async function runScenario(meta, body) {
   const { browser, page } = await launchBrowser();
+  // Centrale dialog-handler — accepteert auto alle confirms (klant-overschrijf,
+  // foto-ontbreking-bij-PDF, delete-confirms etc.). One handler total om
+  // "dialog already handled"-conflicten te voorkomen.
+  page.on('dialog', (d) => { d.accept().catch(() => {}); });
   let interrupted = false;
   const onInterrupt = () => { interrupted = true; };
   process.once('SIGINT', onInterrupt);
