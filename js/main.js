@@ -21,6 +21,7 @@ import { initVoorzieningModal, openVoorzieningModalNew, openVoorzieningModalEdit
 import { bindKlantDropdown, refreshKlantDropdown, applyKlantToState, bindVoorzieningDropdown, refreshVoorzieningDropdown, applyVoorzieningToState, resetInstallatieState } from './dropdown-binding.js';
 import { loadDb } from './database.js';
 import { bindSyncButtons } from './sync-ui.js';
+import { showToast } from './toast.js';
 
 const state = createState();
 if (isTestMode()) {
@@ -203,9 +204,10 @@ document.getElementById('btn-load').addEventListener('click', () => {
 
       // C3: detecteer database-bestand (heeft klanten-array + versie, geen meta)
       if (Array.isArray(loaded.klanten) && !loaded.meta) {
-        alert(
+        showToast(
           'Dit lijkt een database-exportbestand. Gebruik "Importeer database" ' +
-          'om klant- en voorzieningengegevens te importeren.'
+          'om klant- en voorzieningengegevens te importeren.',
+          'error'
         );
         return;
       }
@@ -236,7 +238,7 @@ document.getElementById('btn-load').addEventListener('click', () => {
       syncDomFromState();
     } catch (err) {
       console.error('importJson failed:', err);
-      alert('Bestand kon niet geladen worden: ' + err.message);
+      showToast('Bestand kon niet geladen worden: ' + err.message, 'error');
     }
   };
   input.click();
