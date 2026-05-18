@@ -22,6 +22,7 @@ import { bindKlantDropdown, refreshKlantDropdown, applyKlantToState, bindVoorzie
 import { loadDb } from './database.js';
 import { bindSyncButtons } from './sync-ui.js';
 import { showToast } from './toast.js';
+import { showSpinner, hideSpinner } from './spinner.js';
 
 const state = createState();
 if (isTestMode()) {
@@ -268,9 +269,17 @@ document.getElementById('btn-pdf').addEventListener('click', () => {
     const ok = confirm(`Geen foto's bij: ${ontbrekend.join(', ')}.\n\nDoorgaan met PDF-rapport zonder deze foto's?`);
     if (!ok) return;
   }
-  const dd = buildDocDefinition(state);
-  const naam = `inspectie-${state.meta.projectnummer || 'rapport'}-${state.meta.rapportagedatum}.pdf`;
-  pdfMake.createPdf(dd).download(naam);
+  showSpinner('Bezig met genereren van PDF...');
+  try {
+    const dd = buildDocDefinition(state);
+    const naam = `inspectie-${state.meta.projectnummer || 'rapport'}-${state.meta.rapportagedatum}.pdf`;
+    pdfMake.createPdf(dd).download(naam, () => hideSpinner());
+    // Safety-net: forceer hide na 10 sec voor het geval download-callback niet vuurt
+    setTimeout(hideSpinner, 10000);
+  } catch (e) {
+    hideSpinner();
+    showToast('PDF-generatie mislukt: ' + e.message, 'error');
+  }
 });
 
 // --- Fase 5: Sync UI (export/import database) ---
