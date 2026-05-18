@@ -286,3 +286,22 @@ document.getElementById('btn-pdf').addEventListener('click', () => {
 bindSyncButtons();
 
 console.log('[NEN-EN-858-2] Formulier geladen.', state);
+
+// --- v3.2 Service worker registratie ---
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').then(reg => {
+      reg.addEventListener('updatefound', () => {
+        const newSW = reg.installing;
+        if (!newSW) return;
+        newSW.addEventListener('statechange', () => {
+          if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
+            showToast('Nieuwe versie beschikbaar — herlaad de pagina om te activeren.', 'info');
+          }
+        });
+      });
+    }).catch(err => {
+      console.warn('[v3 PWA] Service worker registratie mislukt:', err);
+    });
+  });
+}
