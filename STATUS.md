@@ -34,8 +34,20 @@
 - Tool werkt offline na 1e bezoek
 - Installeerbaar als app op startscherm (Android)
 
+## Fase v3.3 — UX-finish + CI ✓ Afgerond op 2026-05-18
+
+Kleine verbeteringen op basis van grondige test van v3:
+- Voorpagina geen footer; sectie-pagina's tellen 1 t/m N-1 i.p.v. inclusief voorpagina
+- `photoBlock` krijgt optionele `size`-parameter (default 140); §6 Inwendige controle gebruikt 110px voor 5 sub-foto-blokken zodat sectie compacter wordt (valt nu nog over 2 pagina's met natuurlijke break — sub-blokken radio+opmerking+foto blijven samen vragen om 2 pagina's; backlog v3.4 voor wrapper-block)
+- Spinner safety-net 10s → 20s via `PDF_SPINNER_TIMEOUT_MS` constante in main.js
+- GitHub Actions workflow `.github/workflows/test.yml` draait `npm ci + npm test` bij elke push naar main en alle pull requests (eerste run groen ✓)
+- Obsolete `it.skip` test in `tests/sync-ui.test.js` (uit v2 fase 5, mode-keuze via confirm) verwijderd; describe hernoemd naar 'bindSyncButtons — idempotency'
+
+Tests: 277 groen + **0 skipped** (was 277 + 1 skipped).
+
 ## Fase 7 backlog (v3.3+ — afhankelijk van praktijk)
 
 - Inline delete-bevestiging i.p.v. confirm
 - Emoji-prefix sync-knoppen
 - Custom domain (`inspectie.symitech.nl`)
+- §6 Inwendig op 1 pagina via subBlock+photoBlock wrapper (in v3.3 alleen photoBlock kleiner, sub-blokken nog separaat onbreakbaar — voor 1-pagina-garantie wrapper-block nodig)
