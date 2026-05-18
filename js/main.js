@@ -24,6 +24,8 @@ import { bindSyncButtons } from './sync-ui.js';
 import { showToast } from './toast.js';
 import { showSpinner, hideSpinner } from './spinner.js';
 
+const PDF_SPINNER_TIMEOUT_MS = 20000;
+
 const state = createState();
 if (isTestMode()) {
   populateTestData(state);
@@ -275,7 +277,7 @@ document.getElementById('btn-pdf').addEventListener('click', () => {
     const naam = `inspectie-${state.meta.projectnummer || 'rapport'}-${state.meta.rapportagedatum}.pdf`;
     pdfMake.createPdf(dd).download(naam, () => hideSpinner());
     // Safety-net: forceer hide na 10 sec voor het geval download-callback niet vuurt
-    setTimeout(hideSpinner, 10000);
+    setTimeout(hideSpinner, PDF_SPINNER_TIMEOUT_MS);
   } catch (e) {
     hideSpinner();
     showToast('PDF-generatie mislukt: ' + e.message, 'error');
