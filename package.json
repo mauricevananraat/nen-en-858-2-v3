@@ -7,7 +7,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "gen-icons": "node scripts/gen-icons.mjs",
-    "demo": "node scripts/live-demo.mjs"
+    "demo": "node scripts/demo-scenarios.mjs",
+    "demo:tour": "node scripts/live-demo.mjs"
   },
   "devDependencies": {
     "@vitest/ui": "^1.6.0",
