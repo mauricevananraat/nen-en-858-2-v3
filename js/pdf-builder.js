@@ -37,19 +37,20 @@ function dataRow(label, value) {
   };
 }
 
-function photoBlock(photos, title) {
+function photoBlock(photos, title, size = 140) {
   if (!photos?.length) return null;
+  const colWidth = size + 10; // kolom iets ruimer dan thumbnail
   return {
     stack: [
       { text: title, fontSize: 9, italics: true, color: '#555', margin: [0, 6, 0, 4] },
       {
         columns: photos.map(p => ({
           stack: [
-            // fit: [140, 140] dwingt 1:1 vakje af, ook bij oudere foto's met andere aspect ratio
-            { image: p.dataurl, fit: [140, 140] },
+            // fit: [size, size] dwingt 1:1 vakje af, ook bij oudere foto's met andere aspect ratio
+            { image: p.dataurl, fit: [size, size] },
             ...(p.bijschrift ? [{ text: p.bijschrift, fontSize: 8, italics: true, alignment: 'center', margin: [0, 2] }] : [])
           ],
-          width: 150,
+          width: colWidth,
           margin: [0, 0, 6, 0]
         }))
       }
@@ -578,11 +579,11 @@ export function buildSection6Inwendig(state) {
   return sectionCard('6. INWENDIGE CONTROLE (na lediging)', [
     ...rows,
     coalActie ? dataRow('Coalescentiefilter — actie', ACTIE_LABEL[coalActie] || coalActie) : null,
-    photoBlock(state.fotos.inwendig_wanden,       "Foto's wanden + bodem:"),
-    photoBlock(state.fotos.inwendig_schotten,     "Foto's schotten / vlotterkoker:"),
-    photoBlock(state.fotos.inwendig_coalescentie, "Foto's coalescentiefilter:"),
-    photoBlock(state.fotos.inwendig_afsluiter,    "Foto's afsluiter mechanisch:"),
-    photoBlock(state.fotos.inwendig_naden,        "Foto's naden / aansluitingen:")
+    photoBlock(state.fotos.inwendig_wanden,       "Foto's wanden + bodem:",       110),
+    photoBlock(state.fotos.inwendig_schotten,     "Foto's schotten / vlotterkoker:", 110),
+    photoBlock(state.fotos.inwendig_coalescentie, "Foto's coalescentiefilter:",      110),
+    photoBlock(state.fotos.inwendig_afsluiter,    "Foto's afsluiter mechanisch:",    110),
+    photoBlock(state.fotos.inwendig_naden,        "Foto's naden / aansluitingen:",   110)
   ]);
 }
 
