@@ -5,7 +5,7 @@ REM Reden: ES modules (type="module") werken niet onder file:// vanwege CORS.
 setlocal
 cd /d "%~dp0"
 
-set PORT=8766
+set PORT=8767
 set URL=http://localhost:%PORT%/NEN-EN-858-2%%20controle%%20formulier.html
 
 echo.

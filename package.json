@@ -1,6 +1,7 @@
 {
-  "name": "nen-en-858-2-controle-formulier-v2",
-  "version": "0.2.0",
+  "name": "nen-en-858-2-controle-formulier-v3",
+  "version": "0.3.0",
+  "description": "Inspectietool NEN-EN 858-2 v3 — UX-polish + PWA",
   "private": true,
   "scripts": {
     "test": "vitest run",
