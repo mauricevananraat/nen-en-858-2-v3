@@ -215,8 +215,9 @@ export function buildVoorpagina(state) {
         ],
         absolutePosition: { x: 40, y: 770 }
       }
-    ],
-    pageBreak: 'after'
+    ]
+    // pageBreak verwijderd: sectionCard heeft nu zelf pageBreak: 'before',
+    // dubbele break zou een lege pagina tussen voorpagina en sectie 1 maken.
   };
 }
 
