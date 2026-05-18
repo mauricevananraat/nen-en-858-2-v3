@@ -45,6 +45,28 @@ Kleine verbeteringen op basis van grondige test van v3:
 
 Tests: 277 groen + **0 skipped** (was 277 + 1 skipped).
 
+## v3.4 — Praktijkscenarios ✓ Afgerond op 2026-05-18
+
+Toegevoegd: 6 realistische praktijkscenarios als Playwright live-demo, selecteerbaar via terminal-menu.
+
+**Wijzigingen:**
+- `npm run demo` = interactief scenario-menu (nieuw)
+- `npm run demo:tour` = oude feature-tour (rename van bestaande)
+- 6 scenario-files in `scripts/scenarios/`
+- Gedeelde helpers in `_shared.mjs` (seed/fill/inject/PDF)
+- SVG-photo-generator in `_photos.mjs` (4 status-kleuren)
+
+**Scenarios:**
+1. Garage van Dijk — halfjaarlijks — GOEDGEKEURD
+2. Trans-Vechtdal — jaarlijks — opmerking
+3. Metaalbewerking Berken — jaarlijks — AFGEKEURD
+4. Esso A50 — 5-jaarlijks — GOEDGEKEURD (OBAS-24)
+5. Loonwerker Veldhuis — 5-jaarlijks — AFGEKEURD (lekdicht+coating)
+6. Berken hercontrole — jaarlijks — GOEDGEKEURD (opheffing afkeur)
+
+**Spec:** `docs/superpowers/specs/2026-05-18-praktijkscenarios-design.md`
+**Plan:** `docs/superpowers/plans/2026-05-18-praktijkscenarios-implementation.md`
+
 ## Fase 7 backlog (v3.3+ — afhankelijk van praktijk)
 
 - Inline delete-bevestiging i.p.v. confirm
