@@ -602,3 +602,43 @@ textarea.field-input { resize: vertical; min-height: 60px; font-family: inherit;
 @media (max-width: 600px) {
   .mode-cards { grid-template-columns: 1fr; }
 }
+
+/* ============================================================
+   Spinner overlay (PDF-genereren etc.)
+   ============================================================ */
+.spinner-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.82);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  backdrop-filter: blur(2px);
+}
+
+.spinner-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.spinner-circle {
+  width: 56px;
+  height: 56px;
+  border: 5px solid #cfd8dc;
+  border-top-color: #005EB8;
+  border-radius: 50%;
+  animation: spinner-rotate 0.8s linear infinite;
+}
+
+.spinner-message {
+  font-size: 15px;
+  color: #333;
+  font-weight: 500;
+}
+
+@keyframes spinner-rotate {
+  to { transform: rotate(360deg); }
+}
