@@ -229,12 +229,15 @@ export function buildDocDefinition(state) {
     header: (currentPage) => currentPage === 1 ? null : ({
       canvas: [{ type: 'rect', x: 40, y: 20, w: 515, h: 25, linearGradient: [COLORS.brown, COLORS.brownLight] }]
     }),
-    footer: (currentPage, pageCount) => ({
-      columns: [
-        { text: 'Symitech B.V. · Landsweg 4, 3237 KG Vierpolders', alignment: 'left', fontSize: 8, color: '#666', margin: [40, 0, 0, 0] },
-        { text: `Pagina ${currentPage} van ${pageCount}`, alignment: 'right', fontSize: 8, color: '#666', margin: [0, 0, 40, 0] }
-      ]
-    }),
+    footer: (currentPage, pageCount) => {
+      if (currentPage === 1) return null; // voorpagina geen footer
+      return {
+        columns: [
+          { text: 'Symitech B.V. · Landsweg 4, 3237 KG Vierpolders', alignment: 'left', fontSize: 8, color: '#666', margin: [40, 0, 0, 0] },
+          { text: `Pagina ${currentPage - 1} van ${pageCount - 1}`, alignment: 'right', fontSize: 8, color: '#666', margin: [0, 0, 40, 0] }
+        ]
+      };
+    },
     content: compact([
       buildVoorpagina(state),
       buildSection1(state),
