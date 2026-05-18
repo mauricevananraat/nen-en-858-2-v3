@@ -53,7 +53,8 @@ function photoBlock(photos, title) {
           margin: [0, 0, 6, 0]
         }))
       }
-    ]
+    ],
+    unbreakable: true
   };
 }
 
@@ -64,7 +65,7 @@ function compact(arr) {
 // sectionCard wrapt een sectie in een card-look (matched HTML .form-section):
 // - blauwe header-rij met witte titel-tekst
 // - witte body-rij met content
-// - unbreakable verwijderd: pdfMake negeert de hint voor secties groter dan 1 pagina
+// - pageBreak: 'before' zorgt dat elke hoofdsectie op nieuwe pagina begint
 function sectionCard(title, bodyArray) {
   return {
     table: {
@@ -93,7 +94,8 @@ function sectionCard(title, bodyArray) {
       paddingTop: () => 0,
       paddingBottom: () => 0
     },
-    margin: [0, 0, 0, 12]
+    margin: [0, 0, 0, 12],
+    pageBreak: 'before'
   };
 }
 
