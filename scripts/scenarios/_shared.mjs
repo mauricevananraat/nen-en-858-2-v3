@@ -93,11 +93,18 @@ export async function seedDatabase(page, klant, voorz) {
 // ─── Dropdowns ──────────────────────────────────────────────────────────────
 
 export async function selectKlant(page, bedrijfsnaam) {
+  // [data-picker="klant"] IS de <select> (zie js/dropdown-binding.js).
+  // Wacht eerst tot het dropdown bevolkt is met deze klant — kan na seed+reload
+  // even duren voor bindKlantDropdown is uitgevoerd.
+  await page.waitForFunction((naam) => {
+    const sel = document.querySelector('[data-picker="klant"]');
+    if (!sel) return false;
+    return Array.from(sel.options).some(o => o.textContent && o.textContent.includes(naam));
+  }, bedrijfsnaam, { timeout: 8000 });
+
   await page.evaluate((naam) => {
-    const select = document.querySelector('[data-picker="klant"] select');
-    if (!select) throw new Error('Klant-picker niet gevonden');
+    const select = document.querySelector('[data-picker="klant"]');
     const opt = Array.from(select.options).find(o => o.textContent.includes(naam));
-    if (!opt) throw new Error(`Klant "${naam}" niet in dropdown`);
     select.value = opt.value;
     select.dispatchEvent(new Event('change', { bubbles: true }));
   }, bedrijfsnaam);
@@ -105,11 +112,17 @@ export async function selectKlant(page, bedrijfsnaam) {
 }
 
 export async function selectVoorziening(page, naam) {
+  // Idem als klant — wacht tot voorziening in dropdown verschijnt
+  // (refreshVoorzieningDropdown wordt getriggerd door klant-change-event).
+  await page.waitForFunction((n) => {
+    const sel = document.querySelector('[data-picker="voorziening"]');
+    if (!sel) return false;
+    return Array.from(sel.options).some(o => o.textContent && o.textContent.includes(n));
+  }, naam, { timeout: 8000 });
+
   await page.evaluate((n) => {
-    const select = document.querySelector('[data-picker="voorziening"] select');
-    if (!select) throw new Error('Voorziening-picker niet gevonden');
+    const select = document.querySelector('[data-picker="voorziening"]');
     const opt = Array.from(select.options).find(o => o.textContent.includes(n));
-    if (!opt) throw new Error(`Voorziening "${n}" niet in dropdown`);
     select.value = opt.value;
     select.dispatchEvent(new Event('change', { bubbles: true }));
   }, naam);
