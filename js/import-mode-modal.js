@@ -1,4 +1,4 @@
-import { openModal, closeModal, bindModalClose } from './modal.js';
+import { openModal, closeModal } from './modal.js';
 
 const MODAL_HTML = `
 <div class="modal" id="import-mode-modal" aria-hidden="true">
@@ -32,6 +32,7 @@ const MODAL_HTML = `
 let modalEl = null;
 let currentResolve = null;
 let selectedMode = null;
+let escHandler = null;
 
 function ensureModal() {
   if (modalEl && document.body.contains(modalEl)) return modalEl;
@@ -39,7 +40,9 @@ function ensureModal() {
   div.innerHTML = MODAL_HTML.trim();
   modalEl = div.firstElementChild;
   document.body.appendChild(modalEl);
-  bindModalClose(modalEl);
+
+  // Backdrop-click sluit met null (annuleren)
+  modalEl.querySelector('.modal-backdrop').addEventListener('click', () => finish(null));
 
   modalEl.querySelectorAll('[data-mode-card]').forEach(card => {
     card.addEventListener('click', () => {
@@ -66,6 +69,11 @@ function finish(result) {
   if (currentResolve) {
     const resolve = currentResolve;
     currentResolve = null;
+    // Verwijder ESC-handler (was alleen actief tijdens openstand)
+    if (escHandler) {
+      document.removeEventListener('keydown', escHandler);
+      escHandler = null;
+    }
     closeModal(modalEl);
     resolve(result);
   }
@@ -90,11 +98,21 @@ export function openImportModeModal(currentDb, importedDb) {
   modalEl.querySelector('[data-detail="samenvoegen"]').textContent =
     `Nieuwe items uit bestand worden toegevoegd, bestaande blijven behouden (ID-collisions: bestand verliest).`;
 
+  // ESC-handler alleen actief tijdens openstand
+  escHandler = (e) => {
+    if (e.key === 'Escape') finish(null);
+  };
+  document.addEventListener('keydown', escHandler);
+
   openModal(modalEl);
   return new Promise(resolve => { currentResolve = resolve; });
 }
 
 export function _resetModeModalForTests() {
+  if (escHandler) {
+    document.removeEventListener('keydown', escHandler);
+    escHandler = null;
+  }
   if (modalEl && modalEl.parentNode) modalEl.parentNode.removeChild(modalEl);
   modalEl = null;
   currentResolve = null;

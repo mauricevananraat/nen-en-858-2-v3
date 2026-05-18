@@ -61,4 +61,24 @@ describe('openImportModeModal', () => {
     document.querySelector('[data-mode-card="vervang"]').click();
     expect(confirmBtn.disabled).toBe(false);
   });
+
+  it('resolved met null bij backdrop-click', async () => {
+    const promise = openImportModeModal(
+      { klanten: [], voorzieningen: [] },
+      { klanten: [], voorzieningen: [] }
+    );
+    document.querySelector('#import-mode-modal .modal-backdrop').click();
+    const result = await promise;
+    expect(result).toBeNull();
+  });
+
+  it('resolved met null bij ESC-keydown', async () => {
+    const promise = openImportModeModal(
+      { klanten: [], voorzieningen: [] },
+      { klanten: [], voorzieningen: [] }
+    );
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    const result = await promise;
+    expect(result).toBeNull();
+  });
 });

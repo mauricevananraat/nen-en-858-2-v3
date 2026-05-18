@@ -94,6 +94,11 @@ export function bindSyncButtons() {
           showToast('Ongeldig JSON-bestand: ' + e.message, 'error');
           return;
         }
+        // Structuur-validatie: alleen database-exports doorlaten
+        if (!importedDb.versie || !Array.isArray(importedDb.klanten)) {
+          showToast('Dit bestand is geen geldige database-export. Gebruik "Concept laden" als dit een conceptbestand is.', 'error');
+          return;
+        }
         const currentDb = loadDb();
         const mode = await openImportModeModal(currentDb, importedDb);
         if (!mode) return; // gebruiker annuleerde
