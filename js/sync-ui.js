@@ -1,5 +1,6 @@
 import { loadDb, exportDb, saveDb, importDb } from './database.js';
 import { showToast } from './toast.js';
+import { openImportModeModal } from './import-mode-modal.js';
 
 // Pure logica voor export: lees db, genereer JSON + filename met datum
 export function exportToFile() {
@@ -86,12 +87,16 @@ export function bindSyncButtons() {
         const file = e.target.files[0];
         if (!file) return;
         const text = await file.text();
-        const wilVervangen = confirm(
-          'Database importeren:\n\n' +
-          'Klik OK om de huidige database VOLLEDIG TE VERVANGEN met het bestand.\n\n' +
-          'Klik Annuleren om de bestaande klanten te BEHOUDEN en alleen nieuwe items uit het bestand toe te voegen (samenvoegen).'
-        );
-        const mode = wilVervangen ? 'vervang' : 'samenvoegen';
+        let importedDb;
+        try {
+          importedDb = JSON.parse(text);
+        } catch (e) {
+          showToast('Ongeldig JSON-bestand: ' + e.message, 'error');
+          return;
+        }
+        const currentDb = loadDb();
+        const mode = await openImportModeModal(currentDb, importedDb);
+        if (!mode) return; // gebruiker annuleerde
         const result = importFromText(text, mode);
         if (!result.success) {
           showToast('Importeren mislukt: ' + result.error, 'error');
