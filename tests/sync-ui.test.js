@@ -158,35 +158,13 @@ describe('bindSyncButtons — export', () => {
   });
 });
 
-describe('bindSyncButtons — import-mode dialog', () => {
+describe('bindSyncButtons — idempotency', () => {
   beforeEach(() => localStorage.clear());
-
-  it.skip('vraagt mode via confirm bij bestand-selectie', async () => {
-    saveDb({ versie: 1, klanten: [], voorzieningen: [] });
-    makeContainer();
-    bindSyncButtons();
-
-    let confirmCalled = false;
-    const origConfirm = window.confirm;
-    window.confirm = () => { confirmCalled = true; return false; };
-    try {
-      // Simuleer file picker resultaat door direct importFromText aan te roepen
-      // is niet meer testable via bindSyncButtons zonder gebruiker-flow.
-      // Skip deze test — directe handler-test is voldoende.
-      // Hierin testen we alleen dat bindSyncButtons listeners toevoegt.
-      expect(typeof document.getElementById('btn-import-db').onclick === 'function'
-        || document.getElementById('btn-import-db').addEventListener).toBeTruthy();
-    } finally {
-      window.confirm = origConfirm;
-    }
-  });
 
   it('is idempotent — 2x bindSyncButtons aanroepen voegt niet dubbele listeners toe', () => {
     makeContainer();
     bindSyncButtons();
     bindSyncButtons();
-    // Geen specifieke assertie — we testen alleen dat het niet crasht
-    // De idempotency-guard staat in de implementatie
     expect(document.body.dataset.syncButtonsBound).toBe('1');
   });
 });
