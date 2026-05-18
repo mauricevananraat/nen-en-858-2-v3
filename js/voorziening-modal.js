@@ -1,5 +1,6 @@
 import { openModal, closeModal, bindModalClose } from './modal.js';
 import { loadDb, saveDb, addVoorziening, updateVoorziening } from './database.js';
+import { showToast } from './toast.js';
 
 const MODAL_HTML = `
 <div class="modal" id="voorziening-modal" aria-hidden="true">
@@ -167,7 +168,7 @@ function handleSave() {
   data.klant_id = currentKlantId;
 
   if (!data.naam || !data.naam.trim()) {
-    alert('Naam is verplicht');
+    showToast('Naam is verplicht', 'error');
     return;
   }
 
@@ -183,7 +184,7 @@ function handleSave() {
   try {
     saveDb(db);
   } catch (e) {
-    alert(e.message);
+    showToast(e.message, 'error');
     return;
   }
   closeModal(modalEl);

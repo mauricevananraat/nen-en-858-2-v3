@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { initVoorzieningModal, openVoorzieningModalNew, openVoorzieningModalEdit, _resetForTests } from '../js/voorziening-modal.js';
 import { saveDb } from '../js/database.js';
+import { _resetToastsForTests } from '../js/toast.js';
 
 describe('voorziening-modal — init + open new', () => {
   beforeEach(() => {
@@ -102,6 +103,37 @@ describe('voorziening-modal — init + open new', () => {
     expect(document.querySelector('[name="type_lozing"][value="Vrij verval riool"]')).toBeTruthy();
     expect(document.querySelector('[name="type_lozing"][value="Oppervlaktewater"]')).toBeTruthy();
     expect(document.querySelector('[name="type_lozing"][value="Anders"]')).toBeTruthy();
+  });
+});
+
+describe('voorziening-modal — handleSave validatie toast', () => {
+  beforeEach(() => {
+    document.body.innerHTML = '';
+    localStorage.clear();
+    _resetForTests();
+    _resetToastsForTests();
+    saveDb({
+      versie: 1,
+      klanten: [{ id: 'uniper', bedrijfsnaam: 'Uniper Leiden' }],
+      voorzieningen: []
+    });
+  });
+
+  it('toont error-toast wanneer naam leeg is', () => {
+    initVoorzieningModal();
+    openVoorzieningModalNew('uniper');
+    document.getElementById('voorziening-modal-save').click();
+    const toast = document.querySelector('.toast--error');
+    expect(toast).toBeTruthy();
+    expect(toast.textContent).toContain('verplicht');
+  });
+
+  it('sluit modal niet wanneer naam leeg is', () => {
+    initVoorzieningModal();
+    openVoorzieningModalNew('uniper');
+    document.getElementById('voorziening-modal-save').click();
+    const modal = document.getElementById('voorziening-modal');
+    expect(modal.classList.contains('modal-open')).toBe(true);
   });
 });
 

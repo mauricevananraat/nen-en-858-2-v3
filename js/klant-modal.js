@@ -1,5 +1,6 @@
 import { openModal, closeModal, bindModalClose } from './modal.js';
 import { loadDb, saveDb, addKlant, updateKlant } from './database.js';
+import { showToast } from './toast.js';
 
 const MODAL_HTML = `
 <div class="modal" id="klant-modal" aria-hidden="true">
@@ -107,7 +108,7 @@ function handleSave() {
   data.opdrachtgever_zelfde_als_locatie = !!toggle.checked;
 
   if (!data.bedrijfsnaam || !data.bedrijfsnaam.trim()) {
-    alert('Bedrijfsnaam is verplicht');
+    showToast('Bedrijfsnaam is verplicht', 'error');
     return;
   }
 
@@ -124,7 +125,7 @@ function handleSave() {
   try {
     saveDb(db);
   } catch (e) {
-    alert(e.message);
+    showToast(e.message, 'error');
     return;
   }
   closeModal(modalEl);

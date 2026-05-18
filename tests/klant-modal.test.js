@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { initKlantModal, openKlantModalNew, openKlantModalEdit, _resetForTests } from '../js/klant-modal.js';
+import { _resetToastsForTests } from '../js/toast.js';
 
 describe('klant-modal — init + open new', () => {
   beforeEach(() => {
@@ -58,6 +59,32 @@ describe('klant-modal — init + open new', () => {
     toggle.dispatchEvent(new Event('change'));
     const fields = document.querySelector('#klant-modal .opdrachtgever-fields');
     expect(fields.style.display).toBe('');
+  });
+});
+
+describe('klant-modal — handleSave validatie toast', () => {
+  beforeEach(() => {
+    document.body.innerHTML = '';
+    localStorage.clear();
+    _resetForTests();
+    _resetToastsForTests();
+  });
+
+  it('toont error-toast wanneer bedrijfsnaam leeg is', () => {
+    initKlantModal();
+    openKlantModalNew();
+    document.getElementById('klant-modal-save').click();
+    const toast = document.querySelector('.toast--error');
+    expect(toast).toBeTruthy();
+    expect(toast.textContent).toContain('verplicht');
+  });
+
+  it('sluit modal niet wanneer bedrijfsnaam leeg is', () => {
+    initKlantModal();
+    openKlantModalNew();
+    document.getElementById('klant-modal-save').click();
+    const modal = document.getElementById('klant-modal');
+    expect(modal.classList.contains('modal-open')).toBe(true);
   });
 });
 
