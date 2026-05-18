@@ -5,11 +5,13 @@
   "private": true,
   "scripts": {
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "gen-icons": "node scripts/gen-icons.mjs"
   },
   "devDependencies": {
-    "vitest": "^1.6.0",
+    "@vitest/ui": "^1.6.0",
     "jsdom": "^24.0.0",
-    "@vitest/ui": "^1.6.0"
+    "sharp": "^0.34.5",
+    "vitest": "^1.6.0"
   }
 }
