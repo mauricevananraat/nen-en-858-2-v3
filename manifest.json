@@ -1,0 +1,23 @@
+{
+  "name": "OBAS Inspectie — Symitech",
+  "short_name": "OBAS",
+  "description": "Inspectietool NEN-EN 858-2 voor olie/benzine afscheiders",
+  "start_url": "./NEN-EN-858-2%20controle%20formulier.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#005EB8",
+  "background_color": "#FFFFFF",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
