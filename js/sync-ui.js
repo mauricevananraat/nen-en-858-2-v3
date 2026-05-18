@@ -1,4 +1,5 @@
 import { loadDb, exportDb, saveDb, importDb } from './database.js';
+import { showToast } from './toast.js';
 
 // Pure logica voor export: lees db, genereer JSON + filename met datum
 export function exportToFile() {
@@ -93,11 +94,11 @@ export function bindSyncButtons() {
         const mode = wilVervangen ? 'vervang' : 'samenvoegen';
         const result = importFromText(text, mode);
         if (!result.success) {
-          alert('Importeren mislukt: ' + result.error);
+          showToast('Importeren mislukt: ' + result.error, 'error');
           return;
         }
-        alert(`Database geïmporteerd (mode: ${mode}). Pagina wordt vernieuwd.`);
-        location.reload();
+        showToast(`Database geïmporteerd (mode: ${mode}). Pagina wordt vernieuwd.`, 'success');
+        setTimeout(() => location.reload(), 1500);
       } finally {
         importing = false;
       }

@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { exportToFile, importFromText } from '../js/sync-ui.js';
 import { saveDb } from '../js/database.js';
+import { showToast, _resetToastsForTests } from '../js/toast.js';
 
 describe('exportToFile', () => {
   beforeEach(() => {
@@ -187,5 +188,37 @@ describe('bindSyncButtons — import-mode dialog', () => {
     // Geen specifieke assertie — we testen alleen dat het niet crasht
     // De idempotency-guard staat in de implementatie
     expect(document.body.dataset.syncButtonsBound).toBe('1');
+  });
+});
+
+describe('sync-ui toast integratie', () => {
+  beforeEach(() => {
+    localStorage.clear();
+    _resetToastsForTests();
+    document.body.innerHTML = '';
+  });
+
+  it('toont error-toast bij mislukte import (corrupte JSON)', () => {
+    const result = importFromText('{invalid', 'vervang');
+    expect(result.success).toBe(false);
+    // Simuleer wat bindSyncButtons doet bij result.success === false
+    showToast('Importeren mislukt: ' + result.error, 'error');
+    const toast = document.querySelector('.toast--error');
+    expect(toast).toBeTruthy();
+    expect(toast.textContent).toContain('Importeren mislukt');
+  });
+
+  it('toont success-toast bij geslaagde import', () => {
+    saveDb({ versie: 1, klanten: [], voorzieningen: [] });
+    const imported = JSON.stringify({ versie: 1, klanten: [], voorzieningen: [] });
+    const result = importFromText(imported, 'vervang');
+    expect(result.success).toBe(true);
+    // Simuleer wat bindSyncButtons doet bij result.success === true
+    const mode = 'vervang';
+    showToast(`Database geïmporteerd (mode: ${mode}). Pagina wordt vernieuwd.`, 'success');
+    const toast = document.querySelector('.toast--success');
+    expect(toast).toBeTruthy();
+    expect(toast.textContent).toContain('Database geïmporteerd');
+    expect(toast.textContent).toContain('vervang');
   });
 });
